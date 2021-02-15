@@ -7,11 +7,12 @@
 }
 
 .letter {
-  margin: 10px;
+  margin: 14px;
 }
 
 .appBar {
   padding: 10px 0px 10px 20px;
   display: flex;
   flex-direction: row;
+  margin-bottom: 15px;
 }
