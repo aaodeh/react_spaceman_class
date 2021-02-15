@@ -1,0 +1,17 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.letter {
+  margin: 10px;
+}
+
+.appBar {
+  padding: 10px 0px 10px 20px;
+  display: flex;
+  flex-direction: row;
+}
