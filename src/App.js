@@ -15,16 +15,13 @@ function Alert(props) {
 }
 
 export default function App() {
-  const [turn, setTurn] = useState(0);
-  const [phrase, setPhrase] = useState("i love soccer");
+  const [phrase, setPhrase] = useState("you are my best friend, i think");
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongGuesses, setwrongGuesses] = useState(0);
   const [showWrongAlert, setShowWrongAlert] = useState(false);
   const [showCorrectAlert, setShowCorrectAlert] = useState(false);
 
-  const handleImageTest = () => {
-    setTurn((prev) => (prev + 1) % gameImages.length);
-  };
+  let symbolsToshow = [",", "-"];
 
   const handleGuessedLetter = (letter) => {
     setGuessedLetters((prev) => [...prev, letter]);
@@ -56,14 +53,15 @@ export default function App() {
         <img
           className="graphic"
           src={gameImages[wrongGuesses]}
-          alt={`guess_${turn}`}
+          alt={`guess_${wrongGuesses}`}
         />
 
         <div className="wordDisplay">
           {phrase.split("").map((letter) => {
             return (
               <span className="letterDisplay">
-                {guessedLetters.includes(letter)
+                {guessedLetters.includes(letter) ||
+                symbolsToshow.includes(letter)
                   ? letter
                   : letter !== " "
                   ? "_"
