@@ -9,5 +9,5 @@ export let gameImages = [
   "spaceMan_8.png",
   "spaceMan_9.png",
   "spaceMan_10.png",
-  "spaceManGameOver_loop.gif"
+  "spaceManGameOver.gif"
 ];

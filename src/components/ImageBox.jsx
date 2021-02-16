@@ -26,6 +26,6 @@ const ImageBox = ({ tries }) => {
   return <div style={style}></div>;
 };
 
-ImageBox.defaultProps = { tries: 0 };
+// ImageBox.defaultProps = { tries: 0 };
 
 export default ImageBox;

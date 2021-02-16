@@ -6,8 +6,29 @@
   align-items: center;
 }
 
+.dashBoard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.wordDisplay {
+  margin: 20px;
+}
+
+.letterDisplay {
+  font-size: 25px;
+  margin: 5px;
+}
+
+.graphic {
+  width: 500px;
+}
+
 .letter {
-  margin: 14px;
+  margin: 3px;
+  padding: 6px;
+  font-size: 15px;
 }
 
 .appBar {
@@ -15,4 +36,9 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 15px;
+}
+
+.keyboard {
+  width: 500px;
+  margin-top: 20px;
 }
