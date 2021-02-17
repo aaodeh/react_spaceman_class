@@ -15,7 +15,7 @@ function Alert(props) {
 }
 
 export default function App() {
-  const [phrase, setPhrase] = useState("you are my best friend, i think");
+  const [phrase, setPhrase] = useState("coat rack");
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongGuesses, setwrongGuesses] = useState(0);
   const [showWrongAlert, setShowWrongAlert] = useState(false);
