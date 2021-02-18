@@ -1,9 +1,19 @@
-import react, { useState } from "react";
+import react, { useState, useRef } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
+import Toolbar from "@material-ui/core/Toolbar";
+import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import ImageBox from "./components/ImageBox";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import { gameImages } from "./data.js";
 import "./styles.css";
 
@@ -20,6 +30,17 @@ export default function App() {
   const [wrongGuesses, setwrongGuesses] = useState(0);
   const [showWrongAlert, setShowWrongAlert] = useState(false);
   const [showCorrectAlert, setShowCorrectAlert] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const textInput = useRef(null);
+
+  const handleDialogOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
 
   let symbolsToshow = [",", "-"];
 
@@ -46,7 +67,18 @@ export default function App() {
   return (
     <div className="App">
       <AppBar color="secondary" className="appBar" position="static">
-        <Typography variant="h6">Spaceman</Typography>
+        <div
+          style={{
+            display: "flex",
+            width: "80%",
+            justifyContent: "space-between"
+          }}
+        >
+          <Typography variant="h6">Spaceman</Typography>
+          <Button color="inherit" onClick={handleDialogOpen}>
+            Word Bank
+          </Button>
+        </div>
       </AppBar>
 
       <div className="dashBoard">
@@ -90,6 +122,43 @@ export default function App() {
           })}
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleDialogClose}
+        aria-labelledby="form-dialog-title"
+        fullWidth
+      >
+        <DialogTitle>Work Bank</DialogTitle>
+
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Your Phrase"
+            type="text"
+            fullWidth
+            variant="outlined"
+            placeholder="Type in your phrase"
+            inputRef={textInput}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              setPhrase(textInput.current.value.toLowerCase());
+              handleDialogClose();
+            }}
+            color="primary"
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={showWrongAlert}
