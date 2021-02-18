@@ -1,4 +1,4 @@
-import react, { useState, useRef } from "react";
+import react, { useState, useRef, useEffect } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
@@ -14,7 +14,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { gameImages } from "./data.js";
+import * as helper from "./data.js";
 import "./styles.css";
 
 import Snackbar from "@material-ui/core/Snackbar";
@@ -25,21 +25,29 @@ function Alert(props) {
 }
 
 export default function App() {
-  const [phrase, setPhrase] = useState("coat rack");
+  const [phrase, setPhrase] = useState(helper.pickRandomWord());
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongGuesses, setwrongGuesses] = useState(0);
   const [showWrongAlert, setShowWrongAlert] = useState(false);
   const [showCorrectAlert, setShowCorrectAlert] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [phraseBankOpen, setPhraseBankOpen] = useState(false);
+  const [gameOverOpen, setGameOverOpen] = useState(false);
+
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [gameOverStatus, setGameOverStatus] = useState(false);
 
   const textInput = useRef(null);
 
-  const handleDialogOpen = () => {
-    setOpen(true);
+  const handlePhraseBankDialogOpen = () => {
+    setPhraseBankOpen(true);
   };
 
-  const handleDialogClose = () => {
-    setOpen(false);
+  const handlePhraseBankDialogClose = () => {
+    setPhraseBankOpen(false);
+  };
+
+  const handleGameOverDialogClose = () => {
+    setGameOverOpen(false);
   };
 
   let symbolsToshow = [",", "-"];
@@ -64,6 +72,29 @@ export default function App() {
     setShowCorrectAlert(false);
   };
 
+  useEffect(() => {
+    if (wrongGuesses >= helper.gameImages.length - 1) {
+      setGameOverStatus("You Lost!");
+      setIsGameOver(true);
+      let interval = setInterval((x) => {
+        setGameOverOpen(true);
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }
+
+    if (
+      phrase
+        .split("")
+        .filter((s) => s != " ")
+        .every((i) => guessedLetters.includes(i))
+    ) {
+      setGameOverStatus("You Won!");
+      setGameOverOpen(isGameOver);
+      setIsGameOver(true);
+    }
+  }, [wrongGuesses, guessedLetters, phrase, isGameOver]);
+
   return (
     <div className="App">
       <AppBar color="secondary" className="appBar" position="static">
@@ -75,7 +106,7 @@ export default function App() {
           }}
         >
           <Typography variant="h6">Spaceman</Typography>
-          <Button color="inherit" onClick={handleDialogOpen}>
+          <Button color="inherit" onClick={handlePhraseBankDialogOpen}>
             Word Bank
           </Button>
         </div>
@@ -84,7 +115,7 @@ export default function App() {
       <div className="dashBoard">
         <img
           className="graphic"
-          src={gameImages[wrongGuesses]}
+          src={helper.gameImages[wrongGuesses]}
           alt={`guess_${wrongGuesses}`}
         />
 
@@ -113,7 +144,7 @@ export default function App() {
                 variant="contained"
                 color="primary"
                 value={s}
-                disabled={guessedLetters.includes(s)}
+                disabled={guessedLetters.includes(s) || isGameOver}
                 onClick={() => handleGuessedLetter(s)}
               >
                 {s}
@@ -124,12 +155,12 @@ export default function App() {
       </div>
 
       <Dialog
-        open={open}
-        onClose={handleDialogClose}
+        open={phraseBankOpen}
+        onClose={handlePhraseBankDialogClose}
         aria-labelledby="form-dialog-title"
         fullWidth
       >
-        <DialogTitle>Work Bank</DialogTitle>
+        <DialogTitle>Word Bank</DialogTitle>
 
         <DialogContent>
           <TextField
@@ -145,17 +176,46 @@ export default function App() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
+          <Button onClick={handlePhraseBankDialogClose} color="primary">
             Cancel
           </Button>
           <Button
             onClick={() => {
               setPhrase(textInput.current.value.toLowerCase());
-              handleDialogClose();
+              handlePhraseBankDialogClose();
             }}
             color="primary"
           >
             Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={gameOverOpen}
+        onClose={handleGameOverDialogClose}
+        aria-labelledby="form-dialog-title"
+        fullWidth
+      >
+        <DialogTitle>{gameOverStatus}</DialogTitle>
+
+        <DialogContent>
+          <Typography variant="subtitle1">
+            Would you like to play again?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setwrongGuesses(0);
+              setGuessedLetters([]);
+              setPhrase(helper.pickRandomWord());
+              setIsGameOver(false);
+              handleGameOverDialogClose();
+            }}
+            color="primary"
+          >
+            Play Again!
           </Button>
         </DialogActions>
       </Dialog>
